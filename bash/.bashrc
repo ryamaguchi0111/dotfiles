@@ -118,3 +118,26 @@ fi
 
 
 alias cl="xclip -in -sel clip"
+
+# コマンドの補完機能
+set wildmenu " コマンドモードの補完
+set history=5000 " 保存するコマンド履歴の数
+
+
+# gitの状態を見やすくする
+# hg_branch() {
+#   echo -n '' "(hg:`hg branch 2>/dev/null`)"
+# }
+
+git_branch() {
+  git branch 2>/dev/null | awk '/^\*/ {print " " "(git:" $2 ")"}'
+}
+
+# /current/dir (hg/git:branchname)
+# username@hostname$ _
+PS1=''
+PS1=$PS1'\[\033[01;33m\]（\d-\t）\[\033[0m\]'
+PS1=$PS1'\[\033[01;32m\]\w\[\033[00m\]'
+PS1=$PS1'\[\033[01;36m\]$(git_branch)\[\033[00m\]\n'
+PS1=$PS1'\u@\h\$ '
+export PS1
