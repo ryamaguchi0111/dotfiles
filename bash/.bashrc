@@ -129,15 +129,37 @@ set history=5000 " 保存するコマンド履歴の数
 #   echo -n '' "(hg:`hg branch 2>/dev/null`)"
 # }
 
-git_branch() {
-  git branch 2>/dev/null | awk '/^\*/ {print " " "(git:" $2 ")"}'
+function git_branch() {
+  	git branch 2>/dev/null | awk '/^\*/ {print " " "(git:" $2 ")"}'
 }
 
 # /current/dir (hg/git:branchname)
+#########################################
+# aws の設定
+#########################################
+alias awsp="source _awsp"
+function prompt_awsprof_precmd {
+	profile="${AWS_PROFILE}"
+	if [[ -z "${profile}" ]]; then
+		_prompt_awsprof="----" 
+	else
+	        _prompt_awsprof="${profile}"
+	fi
+	echo "(AWS:${_prompt_awsprof})"
+}
+				  
+#########################################
+# terminalの表示方法の変更
+#########################################
+
 # username@hostname$ _
 PS1=''
-PS1=$PS1'\[\033[01;33m\]（\d-\t）\[\033[0m\]'
-PS1=$PS1'\[\033[01;32m\]\w\[\033[00m\]'
-PS1=$PS1'\[\033[01;36m\]$(git_branch)\[\033[00m\]\n'
+PS1=$PS1'\n'
+PS1=$PS1'\[\e[1;33m\]（\d-\t）\[\e[0m\]\n'
+PS1=$PS1'\[\e[1;32m\]\w\[\e[00m\]\n' # pathの表示
+PS1=$PS1'\[\e[1;35m\]$(prompt_awsprof_precmd)\[\e[00m\]' # AWSの表示
+PS1=$PS1'\[\e[1;36m\]$(git_branch)\[\e[00m\]\n' # gitの表示
 PS1=$PS1'\u@\h\$ '
 export PS1
+
+
